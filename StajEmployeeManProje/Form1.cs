@@ -66,24 +66,29 @@ namespace StajEmployeeManProje
                 return;
             }
 
+            // Demo mode: DB yoksa admin/admin123 ile giriş
+            bool validated = false;
             try
             {
-                if (dal.ValidateUser(usernTextBox.Text.Trim(), passTextBox.Text.Trim()))
-                {
-                    loginUserName = usernTextBox.Text.Trim();
-                    MessageBox.Show("Hoş geldiniz, " + loginUserName + "!", "Başarılı Giriş", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    MainF mainF = new MainF();
-                    mainF.Show();
-                    this.Hide();
-                }
-                else
-                {
-                    MessageBox.Show("Kullanıcı adı veya şifre hatalı.", "Giriş Başarısız", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                validated = dal.ValidateUser(usernTextBox.Text.Trim(), passTextBox.Text.Trim());
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show("Veritabanı bağlantı hatası: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // DB bağlantısı yoksa demo mode
+                if (usernTextBox.Text.Trim() == "admin" && passTextBox.Text.Trim() == "admin123")
+                    validated = true;
+            }
+
+            if (validated)
+            {
+                loginUserName = usernTextBox.Text.Trim();
+                MainF mainF = new MainF();
+                mainF.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Kullanıcı adı veya şifre hatalı.", "Giriş Başarısız", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
